@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: subjectmicroservice
+  labels:
+    app: subjectmicroservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subjectmicroservice
+  template:
+    metadata:
+      labels:
+        app: subjectmicroservice
+    spec:
+      containers:
+        - name: subjectmicroservice
+          image: "development.nfwregistry.com/baltraining/subjectmicroservice:latest"
+          env: 
+            - name: redisconnect
+              value: "localhost"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+        - name: "redis"
+          image: "redis:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 6379
+              protocol: TCP
+      imagePullSecrets:
+        - name: dockerregistrycred

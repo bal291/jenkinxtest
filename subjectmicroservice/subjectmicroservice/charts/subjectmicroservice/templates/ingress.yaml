@@ -1,0 +1,24 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "subjectmicroservice.fullname" . -}}
+{{- $servicePort := .Values.service.port -}}
+{{- $ingressPath := .Values.ingress.path -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ template "subjectmicroservice.name" . }}
+    chart: {{ template "subjectmicroservice.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - http:
+      paths:
+      - path: {{ $ingressPath }}
+        backend:
+          serviceName: {{ $fullName }}
+          servicePort: {{ $servicePort }}
+{{- end }}

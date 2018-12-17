@@ -1,0 +1,3 @@
+FROM microsoft/dotnet:2.1-aspnetcore-runtime 
+COPY /bin/Release/netcoreapp2.1 .
+ENTRYPOINT ["dotnet", "subjectmicroservice.dll"]

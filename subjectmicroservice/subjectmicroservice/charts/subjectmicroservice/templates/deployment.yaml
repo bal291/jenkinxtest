@@ -1,0 +1,45 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "subjectmicroservice.fullname" . }}
+  labels:
+    app: {{ template "subjectmicroservice.name" . }}
+    chart: {{ template "subjectmicroservice.chart" . }}
+    draft: {{ default "draft-app" .Values.draft }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "subjectmicroservice.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "subjectmicroservice.name" . }}
+        draft: {{ default "draft-app" .Values.draft }}
+        release: {{ .Release.Name }}
+      annotations:
+        buildID: {{ .Values.buildID }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env: 
+            - name: redisconnect
+              value: "localhost"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+        - name: "redis"
+          image: "{{ .Values.database.repository }}:{{ .Values.database.tag }}"
+          imagePullPolicy: {{ .Values.database.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 6379
+              protocol: TCP
+      imagePullSecrets:
+        - name: {{ .Values.imageCredentials.name }}

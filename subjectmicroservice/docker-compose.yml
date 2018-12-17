@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  subjectmicroservice:
+    image: subjectmicroservice
+    build:
+      context: .
+      dockerfile: subjectmicroservice/Dockerfile
+    environment:
+      redisconnect: redis
+  redis:
+    image: redis

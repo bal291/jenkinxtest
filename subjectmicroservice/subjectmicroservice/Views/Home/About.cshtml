@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Subjects";
+}
+<h2>@ViewData["Title"]</h2>
+
+
+
+@using (Html.BeginForm("Add", "Home", FormMethod.Post))
+{
+    <input type="text" name="Name" id="Name" />
+
+    <input type="submit" value="Add" />
+
+    <ul>
+        @foreach (var subject in ViewBag.data)
+        {
+            <li>@subject.Name</li>
+        }
+    </ul>
+}
+
+@*<input type="submit" value="Upload" onclick="location.href='@Url.Action("Add", "Home")'" />
+<ul>
+    @foreach (var subject in ViewBag.data)
+    {
+        <li>@subject.Name</li>
+    }
+</ul>*@
+
